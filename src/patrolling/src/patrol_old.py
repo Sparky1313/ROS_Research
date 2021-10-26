@@ -26,7 +26,6 @@ class Patrol:
     def __init__(self):
         self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         self.client.wait_for_server()
-        self.has_robot_task_interrupt = False
 
     def set_goal_to_point(self, position, orientation):
         
@@ -49,32 +48,12 @@ class Patrol:
         goal.target_pose.pose.orientation.w = orientation[3]
 
         self.client.send_goal(goal)
-
-        client_result = ""
-
-        #figure out timing later
-        # This is the status for succeded
-        while client_result != 3:
-            client_result = self.client.get_state()
-            # print(client_result)
-            # print(self.has_robot_task_interrupt)
-            # print
-            
-            if self.has_robot_task_interrupt:
-                print("cancelled")
-                self.client.cancel_all_goals()
-                self.has_robot_task_interrupt = False
-                # I believe this fixes the task interrupt getting overwritten before being scanned
-                rospy.sleep(1)
-                break
-
-            
-        # wait = self.client.wait_for_result()
-        # if not wait:
-        #     rospy.logerr("Action server not available!")
-        #     rospy.signal_shutdown("Action server not available!")
-        # else:
-        #     return self.client.get_result()
+        wait = self.client.wait_for_result()
+        if not wait:
+            rospy.logerr("Action server not available!")
+            rospy.signal_shutdown("Action server not available!")
+        else:
+            return self.client.get_result()
 
 def read_waypoints_file():
     with open("src/patrolling/src/patrol_waypoints.txt", 'r') as file:
@@ -139,31 +118,38 @@ def read_waypoints_file():
 
                 
 class Robot_Task_Listener:
-    def __init__(self, patrol):
+    def __init__(self, lock):
         # self.file = file
         self.task_dict = {
             'doorbell': "src/robot_tasks/src/doorbell_waypoints.txt"
         }
-        self.patrol = patrol
+        self.lock = lock
 
-    def callback(self):
-        # print(data)
-        self.patrol.has_robot_task_interrupt = True
-        print("callback")
+    def callback(self, data):
+        print(data)
+        
 
     def listen(self):
+        self.lock.acquire()
         print("trying to listen")
         # rospy.init_node('robot_task_listener', anonymous=True)
         rospy.Subscriber('robot_tasks', String, self.callback)
         print("listening")
+        sys.stdout.flush()
+        self.lock.release()
         # rospy.spin()
 
 
 if __name__ == '__main__':
+    lock = Lock()
+
+    lock.acquire()
     rospy.loginfo("Reading waypoint list...")
     read_waypoints_file()
     print(waypoints)
     print("Done reading waypoint list")
+    # sys.stdout.flush()
+    lock.release()
 
     rospy.init_node('patrolling')
     try:
@@ -175,13 +161,15 @@ if __name__ == '__main__':
 
         
         patrol = Patrol()
-        listener = Robot_Task_Listener(patrol)
-        listener.listen()
-        
+        listener = Robot_Task_Listener(lock)
+        listen_thread = Thread(target=listener.listen)
+        listen_thread.start()
+
         while not rospy.is_shutdown():
             for i, w in enumerate(waypoints):
+                lock.acquire()
                 rospy.loginfo("Sending waypoint %d", i)
+                lock.release()
                 patrol.set_goal_to_point(w[0], w[1])
-                # break
     except rospy.ROSInterruptException:
         rospy.logerr("Something went wrong when sending the waypoints")
