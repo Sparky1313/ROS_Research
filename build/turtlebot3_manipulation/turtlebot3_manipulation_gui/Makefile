@@ -90,17 +90,6 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
@@ -135,6 +124,17 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # The main all target
 all: cmake_check_build_system
 	cd /home/walle/catkin_ws/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/walle/catkin_ws/build/CMakeFiles /home/walle/catkin_ws/build/turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/progress.marks
@@ -168,21 +168,6 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule
-.PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule
-
-# Convenience name for target.
-turtlebot3_manipulation_gui: turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule
-
-.PHONY : turtlebot3_manipulation_gui
-
-# fast build rule for target.
-turtlebot3_manipulation_gui/fast:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/build
-.PHONY : turtlebot3_manipulation_gui/fast
-
-# Convenience name for target.
 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/moveit_ros_manipulation_gencfg.dir/rule:
 	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/moveit_ros_manipulation_gencfg.dir/rule
 .PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/moveit_ros_manipulation_gencfg.dir/rule
@@ -196,21 +181,6 @@ moveit_ros_manipulation_gencfg: turtlebot3_manipulation/turtlebot3_manipulation_
 moveit_ros_manipulation_gencfg/fast:
 	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/moveit_ros_manipulation_gencfg.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/moveit_ros_manipulation_gencfg.dir/build
 .PHONY : moveit_ros_manipulation_gencfg/fast
-
-# Convenience name for target.
-turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
-.PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-visualization_msgs_generate_messages_eus: turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_eus.dir/rule
-
-.PHONY : visualization_msgs_generate_messages_eus
-
-# fast build rule for target.
-visualization_msgs_generate_messages_eus/fast:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_eus.dir/build
-.PHONY : visualization_msgs_generate_messages_eus/fast
 
 # Convenience name for target.
 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/moveit_ros_planning_gencfg.dir/rule:
@@ -228,64 +198,19 @@ moveit_ros_planning_gencfg/fast:
 .PHONY : moveit_ros_planning_gencfg/fast
 
 # Convenience name for target.
-turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
-.PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule:
+	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule
+.PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule
 
 # Convenience name for target.
-visualization_msgs_generate_messages_cpp: turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/rule
+turtlebot3_manipulation_gui: turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/rule
 
-.PHONY : visualization_msgs_generate_messages_cpp
+.PHONY : turtlebot3_manipulation_gui
 
 # fast build rule for target.
-visualization_msgs_generate_messages_cpp/fast:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_cpp.dir/build
-.PHONY : visualization_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule
-.PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-visualization_msgs_generate_messages_lisp: turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : visualization_msgs_generate_messages_lisp
-
-# fast build rule for target.
-visualization_msgs_generate_messages_lisp/fast:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_lisp.dir/build
-.PHONY : visualization_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
-.PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-visualization_msgs_generate_messages_py: turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_py.dir/rule
-
-.PHONY : visualization_msgs_generate_messages_py
-
-# fast build rule for target.
-visualization_msgs_generate_messages_py/fast:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_py.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_py.dir/build
-.PHONY : visualization_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
-.PHONY : turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-visualization_msgs_generate_messages_nodejs: turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : visualization_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-visualization_msgs_generate_messages_nodejs/fast:
-	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/visualization_msgs_generate_messages_nodejs.dir/build
-.PHONY : visualization_msgs_generate_messages_nodejs/fast
+turtlebot3_manipulation_gui/fast:
+	cd /home/walle/catkin_ws/build && $(MAKE) -f turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/build.make turtlebot3_manipulation/turtlebot3_manipulation_gui/CMakeFiles/turtlebot3_manipulation_gui.dir/build
+.PHONY : turtlebot3_manipulation_gui/fast
 
 include/turtlebot3_manipulation_gui/moc_main_window.o: include/turtlebot3_manipulation_gui/moc_main_window.cpp.o
 
@@ -431,18 +356,13 @@ help:
 	@echo "... install/strip"
 	@echo "... install"
 	@echo "... list_install_components"
-	@echo "... rebuild_cache"
+	@echo "... moveit_ros_manipulation_gencfg"
+	@echo "... moveit_ros_planning_gencfg"
 	@echo "... install/local"
 	@echo "... test"
 	@echo "... turtlebot3_manipulation_gui"
-	@echo "... moveit_ros_manipulation_gencfg"
-	@echo "... visualization_msgs_generate_messages_eus"
-	@echo "... moveit_ros_planning_gencfg"
 	@echo "... edit_cache"
-	@echo "... visualization_msgs_generate_messages_cpp"
-	@echo "... visualization_msgs_generate_messages_lisp"
-	@echo "... visualization_msgs_generate_messages_py"
-	@echo "... visualization_msgs_generate_messages_nodejs"
+	@echo "... rebuild_cache"
 	@echo "... include/turtlebot3_manipulation_gui/moc_main_window.o"
 	@echo "... include/turtlebot3_manipulation_gui/moc_main_window.i"
 	@echo "... include/turtlebot3_manipulation_gui/moc_main_window.s"

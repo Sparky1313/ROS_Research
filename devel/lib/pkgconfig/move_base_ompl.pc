@@ -1,0 +1,8 @@
+prefix=/home/walle/catkin_ws/devel
+
+Name: move_base_ompl
+Description: Description of move_base_ompl
+Version: 0.0.1
+Cflags: -I/home/walle/catkin_ws/src/move-base-ompl/include
+Libs: -L${prefix}/lib -lompl_global_planner_lib
+Requires: costmap_2d geometry_msgs nav_core navfn nav_msgs pluginlib roscpp tf
