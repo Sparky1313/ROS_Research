@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
-from os import unsetenv
+from os import path, unsetenv
 import rospy, tf
 from gazebo_msgs.srv import DeleteModel, SpawnModel
 from geometry_msgs.msg import *
+from nav_msgs.msg import Path
+import math
 
 
 def cleanup_models(model_set, delete_func):
@@ -18,6 +20,42 @@ def clean_input(input):
     return input
 
 
+class Path_Listener:
+    def __init__(self):
+        # self.file = file
+        self.task_dict = {
+            'doorbell': "src/robot_tasks/src/doorbell_waypoints.txt"
+        }
+        self.path = Path()
+        self.spawn_point = Point()
+        self.has_path = False
+        self.has_spawn_point = False
+
+    def pick_point(self):
+        print "picking point"
+        num_path_waypoints = len(self.path.poses)
+        spawn_point_pose_stamp_index = int(num_path_waypoints * 3 / 4)  # Tries to pick a point that is far enough away so that it will spawn by the time the robot gets to that position
+        self.spawn_point = self.path.poses[spawn_point_pose_stamp_index].pose.position     # Look under nav_msgsand geometry_msgs to find these properties
+        self.has_spawn_point = True
+
+    def listen(self):
+        print "listening"
+        # rospy.init_node('robot_task_listener', anonymous=True)
+        self.path = rospy.wait_for_message('move_base/DWAPlannerROS/global_plan', Path)
+        # check to see if this message is listened to on 
+        print "received message"
+        self.has_path = True
+        self.pick_point()
+
+        # rospy.spin()
+    
+    def reset_info(self):
+        self.path = Path()
+        self.spawn_point = Point()
+        self.has_path = False
+        self.has_spawn_point = False
+
+
 if __name__ == '__main__':
     GAZEBO_MODEL_PATH = 'src/gazebo_models'
 
@@ -28,6 +66,7 @@ if __name__ == '__main__':
     print("Got it.")
     delete_model = rospy.ServiceProxy("gazebo/delete_model", DeleteModel)
     spawn_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
+    path_listener = Path_Listener()
 
     with open("{}/beer/model.sdf".format(GAZEBO_MODEL_PATH), "r") as f:
         model_xml = f.read()
@@ -59,13 +98,18 @@ if __name__ == '__main__':
         user_input = clean_input(user_input)
         
         if user_input == 's':
+            path_listener.listen()
             model_name = "beer_{}".format(i)# string from last slash to period
-            x_coor = i
-            y_coor = i
+            # x_coor = i
+            # y_coor = i
             # find x and y somewhere within bounds of path
-            model_pose = Pose(Point(x=x_coor, y=y_coor, z=0), orient)
+            while not path_listener.has_spawn_point:
+                pass
+
+            model_pose = Pose(Point(x=path_listener.spawn_point.x, y=path_listener.spawn_point.y, z=path_listener.spawn_point.z), orient)
             spawn_model(model_name, model_xml, "", model_pose, "world")
             model_set.add(model_name)
+            path_listener.reset_info()
             i += 1
             print "{} added".format(model_name)
         elif user_input == 'd':
