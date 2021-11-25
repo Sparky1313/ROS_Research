@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 
+from logging import root
 from os import path, unsetenv
 import rospy, tf
-from gazebo_msgs.srv import DeleteModel, SpawnModel
+from gazebo_msgs.srv import DeleteModel, SpawnModel, GetLinkState, GetModelState
 from geometry_msgs.msg import *
 from nav_msgs.msg import Path
 import math
+import xml.etree.ElementTree as ET
 
+
+TURTLEBOT3_BASE_SWING_RADIUS = 0.266 # manually taken from /turtlebot3_waffle.urdf.xacro specifically /opt/ros/melodic/share/turtlebot3_description/turtlebot3_waffle.urdf.xacro
+TURTLEBOT3_SAFE_BASE_SWING_RADIUS = TURTLEBOT3_BASE_SWING_RADIUS * 2 # giving a generous margin of error for robot to rotate and adjust
 
 def cleanup_models(model_set, delete_func):
     for item in model_set:
@@ -19,6 +24,15 @@ def clean_input(input):
     input = input.strip()
     return input
 
+
+def parse_obj_radius(xml_file):
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    print "{}".format(root)
+    radius_element = root.find("./model/link/collision/geometry/cylinder/radius")
+    radius_val = float(radius_element.text)
+    return radius_val
+    
 
 class Path_Listener:
     def __init__(self):
@@ -66,11 +80,18 @@ if __name__ == '__main__':
     print("Got it.")
     delete_model = rospy.ServiceProxy("gazebo/delete_model", DeleteModel)
     spawn_model = rospy.ServiceProxy("gazebo/spawn_sdf_model", SpawnModel)
+    get_model_state = rospy.ServiceProxy("gazebo/get_model_state", GetModelState)
+    get_link_state = rospy.ServiceProxy("gazebo/get_link_state", GetLinkState)
     path_listener = Path_Listener()
 
     with open("{}/beer/model.sdf".format(GAZEBO_MODEL_PATH), "r") as f:
         model_xml = f.read()
-
+    
+    beer_radius = parse_obj_radius("{}/beer/model.sdf".format(GAZEBO_MODEL_PATH))
+    print "{}".format(beer_radius)
+    print "{}".format(get_model_state("turtlebot3", None).pose.position)
+    # print "{}".format(get_link_state("turtlebot3/base_link", None).link_state.pose.position)
+    print "{}".format(model_xml)
     thing = tf.transformations.quaternion_from_euler(0,0,0)
     print "{}".format(thing)
     orient = Quaternion(0, 0, 0, 1)
@@ -107,10 +128,18 @@ if __name__ == '__main__':
                 pass
 
             model_pose = Pose(Point(x=path_listener.spawn_point.x, y=path_listener.spawn_point.y, z=path_listener.spawn_point.z), orient)
+            robot_pose = get_model_state("turtlebot3", None)
+            distance_between_robot_and_spawn_obj = math.sqrt((abs(model_pose.x - robot_pose.x)**2 + abs(model_pose.y - robot_pose.y)**2))
+
+            if distance_between_robot_and_spawn_obj < TURTLEBOT3_SAFE_BASE_SWING_RADIUS:
+                print "Not safe boi"
             spawn_model(model_name, model_xml, "", model_pose, "world")
             model_set.add(model_name)
             path_listener.reset_info()
             i += 1
+            print "{}".format(model_pose)
+            print "{}".format(robot_pose)
+            print "{}".format(distance_between_robot_and_spawn_obj)
             print "{} added".format(model_name)
         elif user_input == 'd':
             while is_valid_input == False:
