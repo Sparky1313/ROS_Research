@@ -42,14 +42,16 @@ class Path_Listener:
         }
         self.path = Path()
         self.spawn_point = Point()
+        self.path_endpoint = Point()
         self.has_path = False
         self.has_spawn_point = False
 
     def pick_point(self):
         print "picking point"
         num_path_waypoints = len(self.path.poses)
-        spawn_point_pose_stamp_index = int(num_path_waypoints * 3 / 4)  # Tries to pick a point that is far enough away so that it will spawn by the time the robot gets to that position
+        spawn_point_pose_stamp_index = int(num_path_waypoints / 2)  # Tries to pick a point that is far enough away so that it will spawn by the time the robot gets to that position
         self.spawn_point = self.path.poses[spawn_point_pose_stamp_index].pose.position     # Look under nav_msgsand geometry_msgs to find these properties
+        self.path_endpoint= self.path.poses[num_path_waypoints - 1].pose.position
         self.has_spawn_point = True
 
     def listen(self):
@@ -129,10 +131,21 @@ if __name__ == '__main__':
 
             model_pose = Pose(Point(x=path_listener.spawn_point.x, y=path_listener.spawn_point.y, z=path_listener.spawn_point.z), orient)
             robot_pose = get_model_state("turtlebot3", None)
-            distance_between_robot_and_spawn_obj = math.sqrt((abs(model_pose.x - robot_pose.x)**2 + abs(model_pose.y - robot_pose.y)**2))
+            distance_between_robot_and_spawn_obj = math.sqrt(abs(model_pose.position.x - robot_pose.pose.position.x) ** 2 + abs(model_pose.position.y - robot_pose.pose.position.y) ** 2) - beer_radius
+            distance_between_path_endpoint_and_spawn_obj = math.sqrt(abs(path_listener.path_endpoint.x - model_pose.position.x) ** 2 + abs(path_listener.path_endpoint.y - model_pose.position.y) ** 2) - beer_radius
 
-            if distance_between_robot_and_spawn_obj < TURTLEBOT3_SAFE_BASE_SWING_RADIUS:
+            if distance_between_robot_and_spawn_obj < TURTLEBOT3_SAFE_BASE_SWING_RADIUS or distance_between_path_endpoint_and_spawn_obj < TURTLEBOT3_SAFE_BASE_SWING_RADIUS:
                 print "Not safe boi"
+                print "{}".format(path_listener.path_endpoint.x)
+                print "{}".format(path_listener.path_endpoint.y)
+                print "{}".format(model_pose.position.x)
+                print "{}".format(model_pose.position.y)
+                print "{}".format(TURTLEBOT3_SAFE_BASE_SWING_RADIUS)
+                print "{}".format(distance_between_path_endpoint_and_spawn_obj)
+                # print "{}".format(path_listener.path)
+                print "{}".format(len(path_listener.path.poses))
+
+                continue
             spawn_model(model_name, model_xml, "", model_pose, "world")
             model_set.add(model_name)
             path_listener.reset_info()
