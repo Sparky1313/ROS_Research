@@ -77,12 +77,14 @@ cd ~/catkin_ws && catkin_make
 # Running Programs in ROS_Research
 
 ## Basic Commands When Starting any ROS_Research Software
+### Starting Roscore
 To run any of the software in ROS_Research, first open a terminal and run the following commands:
 ```
 cd ~/catkin_ws
 roscore
 ```
 
+### Starting Gazebo and RViz
 To use any of the software you will also need to open 2 more terminal windows based in `~/catkin_ws`.
 
 Now run each of the following commands in a separate terminal in the order listed.
@@ -92,9 +94,46 @@ roslaunch turtlebot3_gazebo turtlebot3_house.launch
 roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml
 ```
 
+#### Gazebo
 `roslaunch turtlebot3_gazebo turtlebot3_house.launch` will open Gazebo, a program that provides a simulation environment for your simulated robot to run. The command launches Gazebo using a TurtleBot3 and the map `turtlebot3_house.world` from the `~/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/worlds` directory using the launch file `turtlebot3_house.launch`in the `~/catkin_ws/src/turtlebot3_simulations/turtlebot3_gazebo/launch` directory.
 
-`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml` will open RViz, a program that allows you to "see" what your robot sees along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`.
+After Gazebo loads it should look like this:
+
+![Installation Image](/README_Photos/Gazebo_Terminal.png)
+
+![Installation Image](/README_Photos/Gazebo_Startup.png)
+
+#### RViz
+`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml` will open RViz, a program that allows you to "see" what your robot "sees" along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a Slam Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named `map1.yaml` of the `turtlebot3_house` has been included.
+
+After RViz loads it should look like this:
+
+![Installation Image](/README_Photos/RViz_Terminal.png)
+
+![Installation Image](/README_Photos/RViz_Startup.png)
+
+After RViz loads you will need to manually position the robot's initial position to match where the robot is in Gazebo.
+
+To do this, zoom out in RViz and find the coordinate that the robot matches up to. Keep track of this coordinate for later.
+
+![Installation Image](/README_Photos/RViz_2d_Zoom_Out.png)
+
+Next, press the "2D Pose Estimate" button.
+
+![Installation Image](/README_Photos/RViz_2d_Pose_Estimate.png)
+
+Go back to the grid and click and hold on the coordinate that you found earlier. A green arrow should appear. The base of the arrow represents the base of the robot, and the head of the arrow represents the rotation of the robot. Try to draw the arrow so that it overlaps the grid line that runs straight to the top of the screen.
+
+***TIP:** The farther out you drag your mouse, the more fine control you will have over the rotation.
+
+Now, let go of the mouse and your robot should reposition according to where you clicked.
+
+*If it didn't work, just try again. No other settings are changed when you reposition your robot*
+
+![Installation Image](/README_Photos/RViz_Robot_Pose_Initialized.png)
+
+Once this is completed you are ready to run other ROS_Research software.
+
 
 
 Next, open 5 more terminal windows based in that directory.
@@ -113,6 +152,7 @@ rosrun spawn_obstacles spawn_obstacles.py
 
 NOTES TO ME:
 - Test if you need to source /devel/setup.bash or if that is leftover from an experiment
+- Add in instruction to download Gazebo object database.
 
 
 
