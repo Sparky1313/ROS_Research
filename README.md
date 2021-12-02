@@ -104,7 +104,7 @@ After Gazebo loads it should look like this:
 ![Gazebo Startup Image](/README_Photos/Gazebo_Startup.png)
 
 #### RViz
-`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml` will open RViz, a program that allows you to "see" what your robot "sees" along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a Slam Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named `map1.yaml` of the `turtlebot3_house` has been included.
+`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a Slam Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named `map1.yaml` of the `turtlebot3_house` has been included.
 
 After RViz loads it should look like this:
 
@@ -118,7 +118,7 @@ To do this, zoom out in RViz and find the coordinate that the robot matches up t
 
 ![RViz Zoom Out Image](/README_Photos/RViz_Zoom_Out.png)
 
-Next, press the "2D Pose Estimate" button.
+Next, press the *2D Pose Estimate* button.
 
 ![RViz 2D Pose Estimate Image](/README_Photos/RViz_2D_Pose_Estimate.png)
 
@@ -128,11 +128,36 @@ Go back to the grid and click and hold on the coordinate that you found earlier.
 
 Now, let go of the mouse and your robot should reposition according to where you clicked.
 
-*If it didn't work, just try again. No other settings are changed when you reposition your robot*
+*If it didn't work, just try again. No other settings are changed when you reposition your robot.*
 
 ![RViz Robot Pose Initialized Image](/README_Photos/RViz_Robot_Pose_Initialized.png)
 
 Once this is completed you are ready to run other ROS_Research software.
+
+## Patrolling Package
+### Listener.py
+
+[listener.py](/src/patrolling/src/listener.py) is a simple script that allows you to create a custom path for your robot using RViz. This path can later be broadcast to the robot by running patrol.py ***Add in section link*** to make the robot patrol the path.
+
+With Gazebo and RViz started up and initialized, open another terminal window.
+
+Enter the following command:
+`listener.py` ***Double Check Command and directory it needs to be run from.***
+***Add Pictures***
+
+After the listener.py is running, press the *2D Nav Goal* button. 
+
+![RViz Robot Pose Initialized Image](/README_Photos/RViz_2D_Nav_Goal.png)
+
+Just like you did for the *2D Pose Estimate* button in the [RViz](https://github.com/Sparky1313/ROS_Research#rviz) section, pick a position and draw an arrow. [listener.py](/src/patrolling/src/listener.py) will then record that position in a file called [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). Your robot should then move to that position and orientation.
+
+![RViz Robot Pose Initialized Image](/README_Photos/RViz_Nav_Goal_Sent.png)
+
+When you are done just ^C in the terminal and the program will end.
+
+**Be careful with listener.py!!! Whenever you start listener.py, it clears out the old coordinates in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). Be sure to save a copy of the waypoints if you want them later.*
+
+
 
 
 
