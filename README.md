@@ -135,10 +135,11 @@ Now, let go of the mouse and your robot should reposition according to where you
 Once this is completed you are ready to run other ROS_Research software.
 
 ## Patrolling Package
-### Listener.py
-
+### listener.py
+#### listener.py Description
 [listener.py](/src/patrolling/src/listener.py) is a simple script that allows you to create a custom path for your robot using RViz. This path can later be broadcast to the robot by running patrol.py ***Add in section link*** to make the robot patrol the path.
 
+#### Running listener.py
 With Gazebo and RViz started up and initialized, open another terminal window.
 
 Enter the following command:
@@ -157,14 +158,31 @@ When you are done just ^C in the terminal and the program will end.
 
 **Be careful with listener.py!!! Whenever you start listener.py, it clears out the old coordinates in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). Be sure to save a copy of the waypoints if you want them later.*
 
+**By default there are already waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), so you can run [patrol.py](/src/patrolling/src/patrol.py) without having to use [listener.py](/src/patrolling/src/listener.py) to record your own waypoints .*
 
-### Patrol.py
 
+### patrol.py
+#### patrol.py Description
 [patrol.py](/src/patrolling/src/patrol.py) is a program that will read in the waypoints stored in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt) and broadcast to the robot so that the robot will move to them. The program uses [actionlib](http://wiki.ros.org/actionlib) and [move_base](http://wiki.ros.org/move_base) to accomplish this.
 
 [patrol.py](/src/patrolling/src/patrol.py) also listens for interrupt tasks for the robot (interrupt tasks are not part of ROS, just a concept for the Patrolling Package). The interrupt tasks can stop the robot's travel its current waypoint and send a separate set of waypoints the robot needs to take for a task. After the robot completes the interrupt task path, it will resume traveling to waypoint it was going to before the interrupt.
 
 There is only one interrupt task currently defined for the TurtleBot3 and that is a [doorbell interrupt](src/robot_tasks/src/doorbell_waypoints.txt). The task is just a set of waypoints in a .txt file just like [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). More tasks can be created and placed in [robot_tasks/src](src/robot_tasks/src/). To implement these in [patrol.py](/src/patrolling/src/patrol.py) just add the file path to `self.task_dict` in the `Robot_Task_Listener` class.
+
+**By default there are already waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), so you can run [patrol.py](/src/patrolling/src/patrol.py) without having to use [listener.py](/src/patrolling/src/listener.py) to record your own waypoints .*
+
+#### Running patrol.py
+To run [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), ensure that Gazebo and RViz are started up and initialized. 
+
+Open another terminal window and enter the following command:
+`patrol.py`
+
+The robot should start patrolling the waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt) forever.
+
+You can use the 
+
+
+
 
 
 Next, open 5 more terminal windows based in that directory.
@@ -184,6 +202,7 @@ rosrun spawn_obstacles spawn_obstacles.py
 NOTES TO ME:
 - Test if you need to source /devel/setup.bash or if that is leftover from an experiment
 - Add in instruction to download Gazebo object database.
+- Add in section about robot_tasks.
 
 
 
