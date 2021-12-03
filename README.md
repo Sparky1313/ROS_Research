@@ -149,7 +149,7 @@ After the listener.py is running, press the *2D Nav Goal* button.
 
 ![RViz Robot Pose Initialized Image](/README_Photos/RViz_2D_Nav_Goal.png)
 
-Just like you did for the *2D Pose Estimate* button in the [RViz](https://github.com/Sparky1313/ROS_Research#rviz) section, pick a position and draw an arrow. [listener.py](/src/patrolling/src/listener.py) will then record that position in a file called [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). Your robot should then move to that position and orientation.
+Just like you did for the *2D Pose Estimate* button in the [RViz section](https://github.com/Sparky1313/ROS_Research#rviz), pick a position and draw an arrow. [listener.py](/src/patrolling/src/listener.py) will then record that position in a file called [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). Your robot should then move to that position and orientation.
 
 ![RViz Robot Pose Initialized Image](/README_Photos/RViz_Nav_Goal_Sent.png)
 
@@ -158,7 +158,13 @@ When you are done just ^C in the terminal and the program will end.
 **Be careful with listener.py!!! Whenever you start listener.py, it clears out the old coordinates in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). Be sure to save a copy of the waypoints if you want them later.*
 
 
+### Patrol.py
 
+[patrol.py](/src/patrolling/src/patrol.py) is a program that will read in the waypoints stored in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt) and broadcast to the robot so that the robot will move to them. The program uses [actionlib](http://wiki.ros.org/actionlib) and [move_base](http://wiki.ros.org/move_base) to accomplish this.
+
+[patrol.py](/src/patrolling/src/patrol.py) also listens for interrupt tasks for the robot (interrupt tasks are not part of ROS, just a concept for the Patrolling Package). The interrupt tasks can stop the robot's travel its current waypoint and send a separate set of waypoints the robot needs to take for a task. After the robot completes the interrupt task path, it will resume traveling to waypoint it was going to before the interrupt.
+
+There is only one interrupt task currently defined for the TurtleBot3 and that is a [doorbell interrupt](src/robot_tasks/src/doorbell_waypoints.txt). The task is just a set of waypoints in a .txt file just like [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). More tasks can be created and placed in [robot_tasks/src](src/robot_tasks/src/). To implement these in [patrol.py](/src/patrolling/src/patrol.py) just add the file path to `self.task_dict` in the `Robot_Task_Listener` class.
 
 
 Next, open 5 more terminal windows based in that directory.
