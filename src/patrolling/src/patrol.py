@@ -62,6 +62,7 @@ def read_waypoints_file(filename):
         return waypoints
 
 
+
 class Patrol:
     """"""
     def __init__(self):
@@ -81,13 +82,11 @@ class Patrol:
         goal.target_pose.pose.orientation.y = orientation[1]
         goal.target_pose.pose.orientation.z = orientation[2]
         goal.target_pose.pose.orientation.w = orientation[3]
-
         self.client.send_goal(goal)
-
+        
         client_result = ""
 
-        #figure out timing later
-        # This is the status for if the robot succeded
+        # 3 is the success status for having made it to the waypoint.
         while client_result != 3:
             client_result = self.client.get_state()
             
@@ -103,52 +102,6 @@ class Patrol:
         return True
 
 
-# def read_waypoints_file(filename):
-#     with open(filename, 'r') as file:
-#         waypoints = []
-
-#         while True:
-#             line = file.readline()
-            
-#             if not line:
-#                 break
-
-#             # When the pose section of the text file is reached
-#             elif "pose" in line:
-#                 waypoint = []
-#                 position = []
-#                 orientation = []
-
-#                 # Skip the position header
-#                 file.readline()
-                
-#                 # Read the x, y, and z coordinates
-#                 for x in range(3):
-#                     line = file.readline()
-                    
-#                     # Skip the label of the coordinate and grab only the value
-#                     text = line.split(": ")
-#                     position.append(float(text[1]))
-                
-#                 waypoint.append(position)
-
-#                 # Skip the orientation header
-#                 file.readline()
-                
-#                 # Read the x, y, z, and w coordinates
-#                 for x in range(4):
-#                     line = file.readline()
-
-#                     # Skip the label of the coordinate and grab only the value
-#                     text = line.split(": ")
-#                     orientation.append(float(text[1]))
-                
-#                 waypoint.append(orientation)
-#                 waypoints.append(waypoint)
-        
-#         return waypoints
-
-              
             
 class Robot_Task_Listener:
     def __init__(self, patrol):
@@ -167,6 +120,7 @@ class Robot_Task_Listener:
         waypoints = read_waypoints_file(self.task_dict['doorbell'])
         # print(waypoints)
         rospy.loginfo("Robot task received.")
+        
         for i, w in enumerate(waypoints):
             rospy.loginfo("Sending robot task waypoint %d", i)
             self.patrol.set_goal_to_point(w[0], w[1])
@@ -176,11 +130,10 @@ class Robot_Task_Listener:
         
 
     def listen(self):
-        rospy.loginfo("Trying to listen for robot tasks.")
-        # rospy.init_node('robot_task_listener', anonymous=True)
+        rospy.loginfo("Trying to listen for robot tasks...")
         rospy.Subscriber('robot_tasks', String, self.callback)
-        print("listening")
-        # rospy.spin()
+        rospy.loginfo("Listening for robot tasks.")
+
 
 
 if __name__ == '__main__':
@@ -189,25 +142,18 @@ if __name__ == '__main__':
     waypoints = read_waypoints_file(main_patrol_waypoint_file)
     # print(waypoints)
     rospy.loginfo("Done reading waypoint list.")
-
     rospy.init_node('patrolling')
-    try:
-        # p = Patrol()
-        # while not rospy.is_shutdown():
-        #     for i, w in enumerate(waypoints):
-        #         rospy.loginfo("Sending waypoint %d - %s", i, w[0])
-        #         p.set_goal_to_point(w[1])
 
-        
+    try:
         patrol = Patrol()
         listener = Robot_Task_Listener(patrol)
         listener.listen()
-        
         did_complete_last_point = True
 
-        # Look into if you need all of this.
         while not rospy.is_shutdown():
             for i, w in enumerate(waypoints):
+                # If the robot receives a robot task between waypoints.
+                # (Look into using a lock for this evenutally)
                 while patrol.has_robot_task_interrupt: 
                     rospy.sleep(1)
 
@@ -215,12 +161,13 @@ if __name__ == '__main__':
                 did_complete_last_point = patrol.set_goal_to_point(w[0], w[1])
 
                 while not did_complete_last_point:
+                    # Wait for the robot task to complete.
                     if patrol.has_robot_task_interrupt:
                         rospy.sleep(1)
+                    # Resends the last waypoint before the robot was interrupted by a robot task.
                     else:
                         rospy.loginfo("Sending waypoint %d", i)
                         did_complete_last_point = patrol.set_goal_to_point(w[0], w[1])
-                        
-                # break
+
     except rospy.ROSInterruptException:
         rospy.logerr("Something went wrong when sending the waypoints.")
