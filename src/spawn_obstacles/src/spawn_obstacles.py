@@ -22,7 +22,7 @@ def delete_all_obstacles(obstacle_set, delete_func):
     """Deletes all of the obstacles the user has created."""
     for item in obstacle_set:
         delete_func(item)
-    print "All obstacles deleted"
+    rospy.loginfo("All obstacles deleted")
 
 
 def clean_user_input(input):
@@ -55,7 +55,7 @@ class Path_Listener:
 
     def pick_point(self):
         """Picks a possible to point on the robot's current path to spawn an obstacle."""
-        print "Picking a possible point for spawning an obstacle..."
+        rospy.loginfo("Picking a possible point for spawning an obstacle...")
         num_path_waypoints = len(self.path.poses)
         spawn_point_pose_stamp_index = int(num_path_waypoints / 2)  # Tries to pick a point that is far enough away so that it will spawn by the time the robot gets to that position
         self.spawn_point = self.path.poses[spawn_point_pose_stamp_index].pose.position  # Look under nav_msgs and geometry_msgs to find these properties
@@ -65,7 +65,7 @@ class Path_Listener:
 
     def listen(self):
         """Waits for a message from 'move_base/DWAPlannerROS/global_plan' that details the robot's current path."""
-        print "Listening..."
+        rospy.loginfo("Listening for path...")
         self.path = rospy.wait_for_message('move_base/DWAPlannerROS/global_plan', Path)
         # print "Received a path."
         self.has_path = True
@@ -85,11 +85,11 @@ if __name__ == '__main__':
     GAZEBO_MODEL_PATH = 'src/gazebo_models'
 
     # Wait for nodes and services
-    print "Waiting for gazebo services..."
+    rospy.loginfo("Waiting for gazebo services...")
     rospy.init_node("spawn_obstacles")
     rospy.wait_for_service("gazebo/delete_model")
     rospy.wait_for_service("gazebo/spawn_sdf_model")
-    print "All services ready."
+    rospy.loginfo("All services ready.")
 
     # Create the necessary service proxies and a Path_Listener
     delete_model = rospy.ServiceProxy("gazebo/delete_model", DeleteModel)
@@ -162,7 +162,7 @@ if __name__ == '__main__':
             # distance_between_path_endpoint_and_spawn_obstacle = math.sqrt(abs(path_listener.path_endpoint.x - obstacle_pose.position.x) ** 2 + abs(path_listener.path_endpoint.y - obstacle_pose.position.y) ** 2) - beer_radius
 
             if distance_between_robot_and_spawn_obstacle < TURTLEBOT3_SAFE_BASE_SWING_RADIUS or distance_between_path_endpoint_and_spawn_obstacle < TURTLEBOT3_SAFE_BASE_SWING_RADIUS:
-                print "Cannot spawn the obstacle. Obstacle is too close to robot's current position or a path endpoint."
+                rospy.loginfo("Cannot spawn the obstacle. Obstacle is too close to robot's current position or a path endpoint.")
                 # print "{}".format(path_listener.path_endpoint.x)
                 # print "{}".format(path_listener.path_endpoint.y)
                 # print "{}".format(obstacle_pose.position.x)
@@ -177,7 +177,7 @@ if __name__ == '__main__':
             obstacle_set.add(obstacle_name)
             path_listener.reset_info()
             obstacle_num += 1
-            print "{} added".format(obstacle_name)
+            rospy.loginfo("{} added".format(obstacle_name))
 
             # print "{}".format(obstacle_pose)
             # print "{}".format(robot_pose)
@@ -192,24 +192,24 @@ if __name__ == '__main__':
                 if user_input == 'r':
                     break
                 elif user_input.isspace():
-                    print "Only whitespace was detected."
+                    rospy.loginfo("Only whitespace was detected.")
                 else:
                     if user_input in obstacle_set:
                         is_valid_input = True
 
                         try:
                             delete_model(user_input)
-                            print "{} was successfully deleted".format(user_input)
+                            rospy.loginfo("{} was successfully deleted".format(user_input))
                         except:
-                            print "Failed to delete {}".format(user_input)
+                            rospy.loginfo("Failed to delete {}".format(user_input))
                     else:
-                        print "{} does not exist. Doublecheck the name you entered.".format(user_input)
+                        rospy.loginfo("{} does not exist. Doublecheck the name you entered.".format(user_input))
 
         elif user_input == 'c':
             delete_all_obstacles(obstacle_set, delete_model)
         elif user_input == 'x':
             delete_all_obstacles(obstacle_set, delete_model)
-            print "Exiting..."
+            rospy.loginfo("Exiting...")
             break
     
 
