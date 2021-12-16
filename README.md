@@ -2,10 +2,12 @@
 
 This is a repository that I used to learn about ROS and to explore different topics in ROS. I only included the files that ended up working.
 
+
 # Setting Up ROS From the Beginning
 This section will teach you how to setup ROS to be able to use this repository.
 
 If you have installed all of the necessary packages, then you may skip this section.
+
 
 ## Installing ROS
 To use this repository, you will want to install [Ubuntu 18](https://releases.ubuntu.com/18.04/).
@@ -15,14 +17,17 @@ Next you will need to install [Ros Melodic](http://wiki.ros.org/melodic/Installa
 
 ![Installation Image](/README_Photos/Installation_Step_1_4.png)
 
+
 ## Configuring the ROS Environment
 For initial configuration of your ROS environment, follow this [guide](http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment).
 - Under the heading **3. Create a ROS Workspace** you will see an optional instruction about setting up ROS with Python 3. **DON'T DO IT!** Everything should be running Python 2.
 
 ![Python 3 Dependency](/README_Photos/Python_3_Dependency.png)
 
+
 # Installing Necessary TurtleBot3 Packages
 [ROBOTIS e-Manual for TurtleBot3](https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/) will be a valuable resource should you run into any issues in this section.
+
 
 ## Getting Basic TurtleBot3 Packages
 These instructions are from the [Quick Start Guide](https://emanual.robotis.com/docs/en/platform/turtlebot3/quick-start/).
@@ -52,6 +57,7 @@ ros-melodic-gmapping ros-melodic-navigation ros-melodic-interactive-markers
 Next, run:
 `echo "export TURTLEBOT3_MODEL=waffle_pi" >> ~/.bashrc`
 
+
 ## Getting TurtleBot3 Simulation Package
 These instructions are from [Simulation](https://emanual.robotis.com/docs/en/platform/turtlebot3/simulation/).
 
@@ -63,6 +69,7 @@ cd ~/catkin_ws && catkin_make
 ```
 
 ## Getting 
+
 
 # Installing ROS_Research
 At this point you should be able to install ROS_Research.
@@ -76,8 +83,8 @@ cd ~/catkin_ws && catkin_make
 
 # Creating a custom SLAM Map
 
-# Running Programs in ROS_Research
 
+# Running Programs in ROS_Research
 ## Basic Commands When Starting any ROS_Research Software
 ### Starting Roscore
 To run any of the software in ROS_Research, first open a terminal and run the following commands:
@@ -106,6 +113,7 @@ After Gazebo loads it should look like this:
 ![Gazebo Terminal Image](/README_Photos/Gazebo_Terminal.png)
 
 ![Gazebo Startup Image](/README_Photos/Gazebo_Startup.png)
+
 
 #### RViz
 `roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a Slam Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named `map1.yaml` of the `turtlebot3_house` has been included.
@@ -137,6 +145,7 @@ Now, let go of the mouse and your robot should reposition according to where you
 ![RViz Robot Pose Initialized Image](/README_Photos/RViz_Robot_Pose_Initialized.png)
 
 Once this is completed you are ready to run other ROS_Research software.
+
 
 ## patrolling Package
 ### listener.py
@@ -178,6 +187,7 @@ There is only one robot task currently defined for the TurtleBot3 and that is a 
 
 **By default there are already waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), so you can run [patrol.py](/src/patrolling/src/patrol.py) without having to use [listener.py](/src/patrolling/src/listener.py) to record your own waypoints .*
 
+
 #### Running patrol.py
 To run [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), ensure that Gazebo and RViz are started up and initialized. 
 
@@ -189,6 +199,7 @@ rosrun patrolling patrol.py
 The robot should start patrolling the waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt) and repeat the path indefinitely.
 
 ![Patrolling](/README_Photos/Patrolling.png)
+
 
 #### Sending a robot task
 To run send a robot task, ensure that Gazebo and RViz are started up and initialized. Then make sure that 
@@ -211,10 +222,16 @@ This will send the robot to "answer" the door. It will then resume traveling to 
 
 ![Doorbell Robot Task](/README_Photos/Robot_Task.png)
 
+
 ## spawn_obstacles package
 ### spawn_obstacles.py
 #### spawn_obstacles.py Description
-[spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) is a program that will spawn obstacles in front of the robot as it travels a to a waypoint so that it will have to maneuver around. This creates a dynamic environment to test against.
+[spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) is a program that will spawn obstacles in front of the robot as it travels a to a waypoint so that it will have to maneuver around them. This creates a dynamic environment to test against.
+
+When obstacles are spawned they will be assigned a specific id/name that can be used to reference them for deletion.
+
+![Obstacle Name](/README_Photos/Obstacle_Name.png)
+
 
 #### Running spawn_obstacles.py
 With Gazebo, RViz, and patrol.py started up and initialized, open another terminal window from `~/catkin_ws`.
@@ -224,7 +241,43 @@ Run the command:
 rosrun spawn_obstacles spawn_obstacles.py
 ```
 
+This will spawn a command line menu:
+
+![Spawn Obstacles Main Menu](/README_Photos/Spawn_Obstacle_Main_Menu.png)
+
+From there you have the option to spawn an obstacle, delete a specific obstacle, cleanup (delete all) obstacles, or cleanup and exit.
+
+
+##### Spawn an obstacle
+Enter 'S' to spawn an obstacle:
+
+![Spawn Obstacle 3](/README_Photos/Spawn_Obstacle_3.png)
+
+![Spawn Obstacle 1](/README_Photos/Spawn_Obstacle_1.png)
+
+![Spawn Obstacle 2](/README_Photos/Spawn_Obstacle_2.png)
+
+An obstacle will be prevented from spawning if it would spawn too close to the robot or a waypoint. The following message will appear:
+
+![Spawn Obstacle Cannot Spawn](/README_Photos/Spawn_Obstacle_Cannot_Spawn.png)
+
+
+##### Delete an obstacle
+Enter 'D' to delete an obstacle. The following menu will appear:
+
+![Delete Obstacle Menu](/README_Photos/Delete_Obstacle_Menu.png)
+
+Enter the obstacle name that you want to delete
+
+
+
+
+
+
+
 This will spawn an object in front of the robot somewhere between it and its goal. By default the object will be a beer bottle, but you can modify ```spawn_obstacles.py``` to use other objects from ```gazebo_models```.
+
+The 
 
 
 
