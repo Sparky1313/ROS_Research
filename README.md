@@ -228,7 +228,7 @@ This will send the robot to "answer" the door. It will then resume traveling to 
 #### spawn_obstacles.py Description
 [spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) is a program that will spawn obstacles in front of the robot as it travels a to a waypoint so that it will have to maneuver around them. This creates a dynamic environment to test against.
 
-When obstacles are spawned they will be assigned a specific id/name that can be used to reference them for deletion.
+When obstacles are spawned they will be assigned a specific id/name that can be used to reference them for deletion. By default the object will be a beer bottle, but you can modify [spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) to use other objects from ```gazebo_models```.
 
 ![Obstacle Name](/README_Photos/Obstacle_Name.png)
 
@@ -248,7 +248,7 @@ This will spawn a command line menu:
 From there you have the option to spawn an obstacle, delete a specific obstacle, cleanup (delete all) obstacles, or cleanup and exit.
 
 
-##### Spawn an obstacle
+#### Spawn an obstacle
 Enter 'S' to spawn an obstacle:
 
 ![Spawn Obstacle 3](/README_Photos/Spawn_Obstacle_3.png)
@@ -262,25 +262,30 @@ An obstacle will be prevented from spawning if it would spawn too close to the r
 ![Spawn Obstacle Cannot Spawn](/README_Photos/Spawn_Obstacle_Cannot_Spawn.png)
 
 
-##### Delete an obstacle
+#### Delete an obstacle
 Enter 'D' to delete an obstacle. The following menu will appear:
 
 ![Delete Obstacle Menu](/README_Photos/Delete_Obstacle_Menu.png)
 
-Enter the obstacle name that you want to delete
+Enter the obstacle name that you want to delete and the obstacle will be deleted if it exists:
+
+![Delete Obstacle 2](/README_Photos/Delete_Obstacle_2.png)
+
+![Delete Obstacle 1](/README_Photos/Delete_Obstacle_1.png)
 
 
+#### Cleanup (Delete All) Obstacles
+Enter 'C' to cleanup (delete all) the obstacles:
+
+![Cleanup Obstacles 2](/README_Photos/Cleanup_Obstacles_2.png)
+
+![Cleanup Obstacles 1](/README_Photos/Cleanup_Obstacles_1.png)
 
 
+#### Cleanup and Exit
+Enter 'X' to cleanup and exit the program:
 
-
-
-This will spawn an object in front of the robot somewhere between it and its goal. By default the object will be a beer bottle, but you can modify ```spawn_obstacles.py``` to use other objects from ```gazebo_models```.
-
-The 
-
-
-
+![Cleanup and Exit](/README_Photos/Cleanup_and_Exit.png)
 
 
 Next, open 5 more terminal windows based in that directory.
@@ -301,7 +306,6 @@ NOTES TO ME:
 - Test if you need to source /devel/setup.bash or if that is leftover from an experiment
 - Add in instruction to download Gazebo object database.
 - Add in section about robot_tasks.
-- Change map1 location and corresponding instruction.
 
 
 
