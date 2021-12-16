@@ -1,6 +1,6 @@
 # Background
 
-This is a repository that I used to learn about ROS and to explore different topics in ROS. Not all of the exploration produced tangible results, but some did.
+This is a repository that I used to learn about ROS and to explore different topics in ROS. I only included the files that ended up working.
 
 # Setting Up ROS From the Beginning
 This section will teach you how to setup ROS to be able to use this repository.
@@ -62,6 +62,8 @@ git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations
 cd ~/catkin_ws && catkin_make
 ```
 
+## Getting 
+
 # Installing ROS_Research
 At this point you should be able to install ROS_Research.
 
@@ -88,12 +90,12 @@ roscore
 To use any of the software you will also need to open 2 more terminal windows based in `~/catkin_ws`.
 
 Now run each of the following commands in a separate terminal in the order listed.
-Make sure to let `roslaunch turtlebot3_gazebo turtlebot3_house.launch` finish before starting the next one `roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml`:
+Make sure to let `roslaunch turtlebot3_gazebo turtlebot3_house.launch` finish before starting the next one `roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml`:
 ```
 roslaunch turtlebot3_gazebo turtlebot3_house.launch
 ```
 ```
-roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml
+roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml
 ```
 
 #### Gazebo
@@ -186,6 +188,8 @@ rosrun patrolling patrol.py
 
 The robot should start patrolling the waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt) and repeat the path indefinitely.
 
+![Patrolling](/README_Photos/Patrolling.png)
+
 #### Sending a robot task
 To run send a robot task, ensure that Gazebo and RViz are started up and initialized. Then make sure that 
 ```
@@ -204,6 +208,8 @@ To run the included doorbell task enter the following command:
 rostopic pub /robot_tasks std_msgs/String "doorbell"
 ```
 This will send the robot to "answer" the door. It will then resume traveling to last waypoint before it was interrupted.
+
+![Doorbell Robot Task](/README_Photos/Robot_Task.png)
 
 ## spawn_obstacles package
 ### spawn_obstacles.py
