@@ -1,6 +1,5 @@
 # Background
-
-This is a repository that I used to learn about ROS and to explore different topics in ROS. I only included the files that ended up working.
+This is a repository that I used to explore different topics in ROS. I only included the files that ended up working.
 
 
 # Setting Up ROS From the Beginning
@@ -68,7 +67,16 @@ git clone -b melodic-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations
 cd ~/catkin_ws && catkin_make
 ```
 
-## Getting 
+## Getting Gazebo_Models
+[gazebo_models](https://github.com/osrf/gazebo_models) is a database of different Gazebo models that people can use. We will need them to spawn obstacles later on.
+
+Run these commands in the terminal:
+```
+cd ~/catkin_ws/src/
+git clone https://github.com/osrf/gazebo_models.git
+```
+
+More information on the database is available here: [http://gazebosim.org/tutorials?tut=model_structure&cat=build_robot](http://gazebosim.org/tutorials?tut=model_structure&cat=build_robot)
 
 
 # Installing ROS_Research
@@ -82,7 +90,7 @@ cd ~/catkin_ws && catkin_make
 ```
 
 # Creating a custom SLAM Map
-
+In order to use Gazebo with RViz you will need a map of the 
 
 # Running Programs in ROS_Research
 ## Basic Commands When Starting any ROS_Research Software
@@ -116,7 +124,7 @@ After Gazebo loads it should look like this:
 
 
 #### RViz
-`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a Slam Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named `map1.yaml` of the `turtlebot3_house` has been included.
+`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a Slam Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named [map1.pgm](src/map1.pgm) (along with its yaml file [map1.yaml](src/map1.yaml)) of `turtlebot3_house` has been included.
 
 After RViz loads it should look like this:
 
@@ -304,8 +312,7 @@ rosrun spawn_obstacles spawn_obstacles.py
 
 NOTES TO ME:
 - Test if you need to source /devel/setup.bash or if that is leftover from an experiment
-- Add in instruction to download Gazebo object database.
-- Add in section about robot_tasks.
+
 
 
 
