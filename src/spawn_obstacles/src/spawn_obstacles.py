@@ -37,6 +37,7 @@ def parse_model_radius(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
     # print "{}".format(root)
+    # This needs to be edited depending on the model.
     radius_element = root.find("./model/link/collision/geometry/cylinder/radius")
     radius_val = float(radius_element.text)
     return radius_val
@@ -57,7 +58,7 @@ class Path_Listener:
         print "Picking a possible point for spawning an obstacle..."
         num_path_waypoints = len(self.path.poses)
         spawn_point_pose_stamp_index = int(num_path_waypoints / 2)  # Tries to pick a point that is far enough away so that it will spawn by the time the robot gets to that position
-        self.spawn_point = self.path.poses[spawn_point_pose_stamp_index].pose.position     # Look under nav_msgsand geometry_msgs to find these properties
+        self.spawn_point = self.path.poses[spawn_point_pose_stamp_index].pose.position  # Look under nav_msgs and geometry_msgs to find these properties
         self.path_endpoint= self.path.poses[num_path_waypoints - 1].pose.position
         self.has_spawn_point = True
 
@@ -122,6 +123,7 @@ if __name__ == '__main__':
     # A set that contains all of the different obstacles created.
     obstacle_set = set()
 
+    # Run forever
     while not rospy.is_shutdown():
         is_valid_input = False
         # Main menu options
@@ -134,23 +136,39 @@ if __name__ == '__main__':
             obstacle_name = "beer_{}".format(obstacle_num)# string from last slash to period
             # x_coor = obstacle_num
             # y_coor = obstacle_num
-            # find x and y somewhere within bounds of path
+
+            # Wait for a spawn point
             while not path_listener.has_spawn_point:
                 pass
 
             obstacle_pose = Pose(Point(x=path_listener.spawn_point.x, y=path_listener.spawn_point.y, z=path_listener.spawn_point.z), orientation)
             robot_pose = get_model_state("turtlebot3", None)
-            distance_between_robot_and_spawn_obj = math.sqrt(abs(obstacle_pose.position.x - robot_pose.pose.position.x) ** 2 + abs(obstacle_pose.position.y - robot_pose.pose.position.y) ** 2) - beer_radius
-            distance_between_path_endpoint_and_spawn_obj = math.sqrt(abs(path_listener.path_endpoint.x - obstacle_pose.position.x) ** 2 + abs(path_listener.path_endpoint.y - obstacle_pose.position.y) ** 2) - beer_radius
 
-            if distance_between_robot_and_spawn_obj < TURTLEBOT3_SAFE_BASE_SWING_RADIUS or distance_between_path_endpoint_and_spawn_obj < TURTLEBOT3_SAFE_BASE_SWING_RADIUS:
+            # double check that this works from the original then get rid of abs value
+
+            # Calculating Pythagorean values for the triangle between the obstacle spawn point and the robot's position.
+            a_squared = abs(obstacle_pose.position.x - robot_pose.pose.position.x) ** 2
+            b_squared = abs(obstacle_pose.position.y - robot_pose.pose.position.y) ** 2
+            c_squared = math.sqrt(a_squared + b_squared)
+            distance_between_robot_and_spawn_obstacle = c_squared - beer_radius
+
+            # Calculating Pythagorean values for the triangle between the path endpoint and the obstacle spawn point.
+            a_squared = abs(path_listener.path_endpoint.x - obstacle_pose.position.x) ** 2
+            b_squared = abs(path_listener.path_endpoint.y - obstacle_pose.position.y) ** 2
+            c_squared = math.sqrt(a_squared + b_squared)
+            distance_between_path_endpoint_and_spawn_obstacle = c_squared - beer_radius
+
+            # distance_between_robot_and_spawn_obstacle = math.sqrt(abs(obstacle_pose.position.x - robot_pose.pose.position.x) ** 2 + abs(obstacle_pose.position.y - robot_pose.pose.position.y) ** 2) - beer_radius
+            # distance_between_path_endpoint_and_spawn_obstacle = math.sqrt(abs(path_listener.path_endpoint.x - obstacle_pose.position.x) ** 2 + abs(path_listener.path_endpoint.y - obstacle_pose.position.y) ** 2) - beer_radius
+
+            if distance_between_robot_and_spawn_obstacle < TURTLEBOT3_SAFE_BASE_SWING_RADIUS or distance_between_path_endpoint_and_spawn_obstacle < TURTLEBOT3_SAFE_BASE_SWING_RADIUS:
                 print "Cannot spawn the obstacle. Obstacle is too close to robot's current position or a path endpoint."
                 # print "{}".format(path_listener.path_endpoint.x)
                 # print "{}".format(path_listener.path_endpoint.y)
                 # print "{}".format(obstacle_pose.position.x)
                 # print "{}".format(obstacle_pose.position.y)
                 # print "{}".format(TURTLEBOT3_SAFE_BASE_SWING_RADIUS)
-                # print "{}".format(distance_between_path_endpoint_and_spawn_obj)
+                # print "{}".format(distance_between_path_endpoint_and_spawn_obstacle)
                 # print "{}".format(path_listener.path)
                 # print "{}".format(len(path_listener.path.poses))
                 continue
@@ -163,7 +181,7 @@ if __name__ == '__main__':
 
             # print "{}".format(obstacle_pose)
             # print "{}".format(robot_pose)
-            # print "{}".format(distance_between_robot_and_spawn_obj)
+            # print "{}".format(distance_between_robot_and_spawn_obstacle)
 
         # User selected to delete an obstacle
         elif user_input == 'd':
