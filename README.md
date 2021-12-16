@@ -1,5 +1,7 @@
 # Background
-This is a repository that I used to explore different topics in ROS. I only included the files that ended up working.
+This is a repository that I used to explore different topics in ROS.
+
+I only included the files that ended up working.
 
 
 # Setting Up ROS From the Beginning
@@ -54,7 +56,9 @@ ros-melodic-gmapping ros-melodic-navigation ros-melodic-interactive-markers
 ```
 
 Next, run:
-`echo "export TURTLEBOT3_MODEL=waffle_pi" >> ~/.bashrc`
+```
+echo "export TURTLEBOT3_MODEL=waffle_pi" >> ~/.bashrc
+```
 
 
 ## Getting TurtleBot3 Simulation Package
@@ -79,8 +83,8 @@ git clone https://github.com/osrf/gazebo_models.git
 More information on the database is available here: [http://gazebosim.org/tutorials?tut=model_structure&cat=build_robot](http://gazebosim.org/tutorials?tut=model_structure&cat=build_robot)
 
 
-# Installing ROS_Research
-At this point you should be able to install ROS_Research.
+# Getting ROS_Research
+At this point you should be able to get ROS_Research.
 
 Run the command:
 ```
@@ -89,8 +93,6 @@ git clone https://github.com/Sparky1313/ROS_Research.git
 cd ~/catkin_ws && catkin_make
 ```
 
-# Creating a custom SLAM Map
-In order to use Gazebo with RViz you will need a map of the 
 
 # Running Programs in ROS_Research
 ## Basic Commands When Starting any ROS_Research Software
@@ -102,7 +104,7 @@ roscore
 ```
 
 ### Starting Gazebo and RViz
-To use any of the software you will also need to open 2 more terminal windows based in `~/catkin_ws`.
+To use any of the software, you will also need to open 2 more terminal windows based in `~/catkin_ws`.
 
 Now run each of the following commands in a separate terminal in the order listed.
 Make sure to let `roslaunch turtlebot3_gazebo turtlebot3_house.launch` finish before starting the next one `roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml`:
@@ -124,7 +126,7 @@ After Gazebo loads it should look like this:
 
 
 #### RViz
-`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a Slam Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named [map1.pgm](src/map1.pgm) (along with its yaml file [map1.yaml](src/map1.yaml)) of `turtlebot3_house` has been included.
+`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a SLAM Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named [map1.pgm](src/map1.pgm) (along with its yaml file [map1.yaml](src/map1.yaml)) of `turtlebot3_house` has been included.
 
 After RViz loads it should look like this:
 
@@ -152,8 +154,17 @@ Now, let go of the mouse and your robot should reposition according to where you
 
 ![RViz Robot Pose Initialized Image](/README_Photos/RViz_Robot_Pose_Initialized.png)
 
-Once this is completed you are ready to run other ROS_Research software.
+Once this is completed, you are ready to run other ROS_Research software.
 
+
+## Creating a Custom SLAM Map
+*This section is optional*
+
+SLAM stands for Simultaneous Localization and Mapping. I won't go into detail about about the theory here, but there are plenty of resources online that explain it.
+
+In order to use Gazebo with RViz you need a map of the Gazebo world that can work with RViz. As stated in the previous section, there is a map already included.
+
+If you would like to make your own using SLAM, you can follow this [tutorial](https://emanual.robotis.com/docs/en/platform/turtlebot3/slam_simulation/).
 
 ## patrolling Package
 ### listener.py
@@ -178,7 +189,7 @@ Just like you did for the *2D Pose Estimate* button in the [RViz section](https:
 
 ![RViz Robot Pose Initialized Image](/README_Photos/RViz_Nav_Goal_Sent.png)
 
-When you are done just ^C in the terminal and the program will end.
+When you are done, just ^C in the terminal and the program will end.
 
 **Be careful with listener.py!!! Whenever you start listener.py, it clears out the old coordinates in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). Be sure to save a copy of the waypoints if you want them later.*
 
@@ -209,7 +220,7 @@ The robot should start patrolling the waypoints in [patrol_waypoints.txt](/src/p
 ![Patrolling](/README_Photos/Patrolling.png)
 
 
-#### Sending a robot task
+#### Sending a Robot Task
 To run send a robot task, ensure that Gazebo and RViz are started up and initialized. Then make sure that 
 ```
 rosrun patrolling patrol.py
@@ -222,7 +233,7 @@ rostopic pub /robot_tasks std_msgs/String "task_name"
 ```
 Replace `task_name` with name of your task that you placed in `self.task_dict` in the `Robot_Task_Listener` class.
 
-To run the included doorbell task enter the following command:
+To run the included doorbell task, enter the following command:
 ```
 rostopic pub /robot_tasks std_msgs/String "doorbell"
 ```
@@ -231,12 +242,12 @@ This will send the robot to "answer" the door. It will then resume traveling to 
 ![Doorbell Robot Task](/README_Photos/Robot_Task.png)
 
 
-## spawn_obstacles package
+## spawn_obstacles Package
 ### spawn_obstacles.py
 #### spawn_obstacles.py Description
 [spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) is a program that will spawn obstacles in front of the robot as it travels a to a waypoint so that it will have to maneuver around them. This creates a dynamic environment to test against.
 
-When obstacles are spawned they will be assigned a specific id/name that can be used to reference them for deletion. By default the object will be a beer bottle, but you can modify [spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) to use other objects from ```gazebo_models```.
+When obstacles are spawned they will be assigned a specific id/name that can be used to reference them for deletion. By default, the object will be a beer bottle. You can modify [spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) to use other objects from ```gazebo_models``` as obstacles.
 
 ![Obstacle Name](/README_Photos/Obstacle_Name.png)
 
@@ -256,7 +267,7 @@ This will spawn a command line menu:
 From there you have the option to spawn an obstacle, delete a specific obstacle, cleanup (delete all) obstacles, or cleanup and exit.
 
 
-#### Spawn an obstacle
+#### Spawn an Obstacle
 Enter 'S' to spawn an obstacle:
 
 ![Spawn Obstacle 3](/README_Photos/Spawn_Obstacle_3.png)
@@ -265,12 +276,12 @@ Enter 'S' to spawn an obstacle:
 
 ![Spawn Obstacle 2](/README_Photos/Spawn_Obstacle_2.png)
 
-An obstacle will be prevented from spawning if it would spawn too close to the robot or a waypoint. The following message will appear:
+An obstacle will be prevented from spawning if it would spawn too close to the robot or a waypoint. The following message will appear if this occurs:
 
 ![Spawn Obstacle Cannot Spawn](/README_Photos/Spawn_Obstacle_Cannot_Spawn.png)
 
 
-#### Delete an obstacle
+#### Delete an Obstacle
 Enter 'D' to delete an obstacle. The following menu will appear:
 
 ![Delete Obstacle Menu](/README_Photos/Delete_Obstacle_Menu.png)
