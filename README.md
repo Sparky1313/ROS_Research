@@ -136,7 +136,7 @@ Now, let go of the mouse and your robot should reposition according to where you
 
 Once this is completed you are ready to run other ROS_Research software.
 
-## Patrolling Package
+## patrolling Package
 ### listener.py
 #### listener.py Description
 [listener.py](/src/patrolling/src/listener.py) is a simple script that allows you to create a custom path for your robot using RViz. This path can later be broadcast to the robot by running patrol.py ***Add in section link*** to make the robot patrol the path.
@@ -181,15 +181,15 @@ To run [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), ensure 
 
 Open another terminal window from `~/catkin_ws` and enter the following command:
 ```
-patrol.py
+rosrun patrolling patrol.py
 ```
 
 The robot should start patrolling the waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt) and repeat the path indefinitely.
 
-#### Starting an interrupt task
-To run [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), ensure that Gazebo and RViz are started up and initialized. Then make sure that 
+#### Sending a robot task
+To run send a robot task, ensure that Gazebo and RViz are started up and initialized. Then make sure that 
 ```
-patrol.py
+rosrun patrolling patrol.py
 ```
 has been run.
 
@@ -204,6 +204,23 @@ To run the included doorbell task enter the following command:
 rostopic pub /robot_tasks std_msgs/String "doorbell"
 ```
 This will send the robot to "answer" the door. It will then resume traveling to last waypoint before it was interrupted.
+
+## spawn_obstacles package
+### spawn_obstacles.py
+#### spawn_obstacles.py Description
+[spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) is a program that will spawn obstacles in front of the robot as it travels a to a waypoint so that it will have to maneuver around. This creates a dynamic environment to test against.
+
+#### Running spawn_obstacles.py
+With Gazebo, RViz, and patrol.py started up and initialized, open another terminal window from `~/catkin_ws`.
+
+Run the command:
+```
+rosrun spawn_obstacles spawn_obstacles.py
+```
+
+This will spawn an object in front of the robot somewhere between it and its goal. By default the object will be a beer bottle, but you can modify ```spawn_obstacles.py``` to use other objects from ```gazebo_models```.
+
+
 
 
 

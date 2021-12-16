@@ -9,32 +9,40 @@ from nav_msgs.msg import Path
 import math
 import xml.etree.ElementTree as ET
 
+# Manually taken from /turtlebot3_waffle.urdf.xacro specifically /opt/ros/melodic/share/turtlebot3_description/turtlebot3_waffle.urdf.xacro
+TURTLEBOT3_SIDE_LENGTH = 0.266
 
-TURTLEBOT3_BASE_SWING_RADIUS = 0.266 # manually taken from /turtlebot3_waffle.urdf.xacro specifically /opt/ros/melodic/share/turtlebot3_description/turtlebot3_waffle.urdf.xacro
-TURTLEBOT3_SAFE_BASE_SWING_RADIUS = TURTLEBOT3_BASE_SWING_RADIUS * 2 # giving a generous margin of error for robot to rotate and adjust
+# The turtlebot's typical pivot is in the rear of the turtlebot so the swing radius is larger than the side length.
+# In addition, it will backup and scooch forward some when adjusting. Therefore, we multiply the length by 2 to
+# give a margin of error for the robot to rotate and adjust
+TURTLEBOT3_SAFE_BASE_SWING_RADIUS = TURTLEBOT3_SIDE_LENGTH * 2 
 
-def cleanup_models(model_set, delete_func):
+def delete_all_models(model_set, delete_func):
+    """Deletes all of the models the user has created."""
     for item in model_set:
         delete_func(item)
     print "All models deleted"
 
 
-def clean_input(input):
+def clean_user_input(input):
+    """Cleans user input from the command line."""
     input = input.lower()
     input = input.strip()
     return input
 
 
 def parse_obj_radius(xml_file):
+    """Gets the objects radius from its sdf file."""
     tree = ET.parse(xml_file)
     root = tree.getroot()
-    print "{}".format(root)
+    # print "{}".format(root)
     radius_element = root.find("./model/link/collision/geometry/cylinder/radius")
     radius_val = float(radius_element.text)
     return radius_val
     
 
 class Path_Listener:
+    """A class that listens to paths broadcasted on 'move_base/DWAPlannerROS/global_plan'"""
     def __init__(self):
         # self.file = file
         self.task_dict = {
@@ -118,7 +126,7 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         is_valid_input = False
         user_input = raw_input("Spawn a new obstacle: Enter \'S\'\nDelete an obstacle: Enter \'D\'\nCleanup: Enter \'C\'\nCleanup and exit: Enter \'X\'\n")
-        user_input = clean_input(user_input)
+        user_input = clean_user_input(user_input)
         
         if user_input == 's':
             path_listener.listen()
@@ -157,7 +165,7 @@ if __name__ == '__main__':
         elif user_input == 'd':
             while is_valid_input == False:
                 user_input = raw_input("Enter the name of the obstacle you want to delete or enter \'R\' to return to the pevious menu:")
-                user_input = clean_input(user_input)
+                user_input = clean_user_input(user_input)
 
                 if user_input == 'r':
                     break
@@ -176,9 +184,9 @@ if __name__ == '__main__':
                         print "{} does not exist. Double-check the name you entered.".format(user_input)
 
         elif user_input == 'c':
-            cleanup_models(model_set, delete_model)
+            delete_all_models(model_set, delete_model)
         elif user_input == 'x':
-            cleanup_models(model_set, delete_model)
+            delete_all_models(model_set, delete_model)
             print "Exiting..."
             break
     
