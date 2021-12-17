@@ -317,16 +317,3 @@ Enter 'C' to cleanup (delete all) the obstacles:
 Enter 'X' to cleanup and exit the program:
 
 ![Cleanup and Exit](/README_Photos/Cleanup_and_Exit.png)
-
-
-Next, open 5 more terminal windows based in that directory.
-
-Now run each of the following commands in a separate terminal in the order listed.
-Make sure to let each command finish before starting the next one:
-```
-roscore
-roslaunch turtlebot3_gazebo turtlebot3_house.launch
-roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map1.yaml
-rosrun patrolling patrol.py
-rosrun spawn_obstacles spawn_obstacles.py
-```
