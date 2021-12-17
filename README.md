@@ -330,13 +330,3 @@ roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/map
 rosrun patrolling patrol.py
 rosrun spawn_obstacles spawn_obstacles.py
 ```
-
-
-
-NOTES TO ME:
-- Test if you need to source /devel/setup.bash or if that is leftover from an experiment
-
-
-
-
-
