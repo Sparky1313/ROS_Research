@@ -8,15 +8,15 @@ class Listener:
         self.file = file
 
     def callback(self, data):
-        print(data)
+        print data
         data = str(data)
         self.file.write(data + "\n")
 
     def listen(self):
-        print("trying to listen")
+        rospy.loginfo("Trying to listen for new patrol path...")
         rospy.init_node('listener', anonymous=True)
         rospy.Subscriber("move_base_simple/goal", PoseStamped, self.callback)
-        print("listening")
+        rospy.loginfo("Now listening for new waypoints...")
         rospy.spin()
 
 if __name__ == '__main__':

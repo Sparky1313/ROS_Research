@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# from logging import root
-# from os import path, unsetenv
 import rospy, tf
 from gazebo_msgs.srv import DeleteModel, SpawnModel, GetLinkState, GetModelState
 from geometry_msgs.msg import *
@@ -13,7 +11,7 @@ import xml.etree.ElementTree as ET
 # The length of one side of a turtlebot3
 TURTLEBOT3_SIDE_LENGTH = 0.266
 
-# The turtlebot's typical pivot is in the rear of the turtlebot so the swing radius is larger than the side length.
+# The turtlebot's typical pivot is in the front of the turtlebot so the swing radius is larger than the side length.
 # In addition, it will backup and scooch forward some when adjusting. Therefore, we multiply the length by 2 to
 # give a margin of error for the robot to rotate and adjust.
 TURTLEBOT3_SAFE_BASE_SWING_RADIUS = TURTLEBOT3_SIDE_LENGTH * 2 
@@ -104,10 +102,6 @@ if __name__ == '__main__':
     
     beer_radius = parse_model_radius("{}/beer/model.sdf".format(GAZEBO_MODEL_PATH))
 
-    ###########3
-    # check to see if this one works beer_radius = parse_model_radius(model_xml)
-    ###########
-
     # print "{}".format(beer_radius)
     # print "{}".format(get_model_state("turtlebot3", None).pose.position)
     # print "{}".format(get_link_state("turtlebot3/base_link", None).link_state.pose.position)
@@ -144,7 +138,6 @@ if __name__ == '__main__':
             obstacle_pose = Pose(Point(x=path_listener.spawn_point.x, y=path_listener.spawn_point.y, z=path_listener.spawn_point.z), orientation)
             robot_pose = get_model_state("turtlebot3", None)
 
-            # double check that this works from the original then get rid of abs value
 
             # Calculating Pythagorean values for the triangle between the obstacle spawn point and the robot's position.
             a_squared = abs(obstacle_pose.position.x - robot_pose.pose.position.x) ** 2
@@ -157,9 +150,6 @@ if __name__ == '__main__':
             b_squared = abs(path_listener.path_endpoint.y - obstacle_pose.position.y) ** 2
             c_squared = math.sqrt(a_squared + b_squared)
             distance_between_path_endpoint_and_spawn_obstacle = c_squared - beer_radius
-
-            # distance_between_robot_and_spawn_obstacle = math.sqrt(abs(obstacle_pose.position.x - robot_pose.pose.position.x) ** 2 + abs(obstacle_pose.position.y - robot_pose.pose.position.y) ** 2) - beer_radius
-            # distance_between_path_endpoint_and_spawn_obstacle = math.sqrt(abs(path_listener.path_endpoint.x - obstacle_pose.position.x) ** 2 + abs(path_listener.path_endpoint.y - obstacle_pose.position.y) ** 2) - beer_radius
 
             if distance_between_robot_and_spawn_obstacle < TURTLEBOT3_SAFE_BASE_SWING_RADIUS or distance_between_path_endpoint_and_spawn_obstacle < TURTLEBOT3_SAFE_BASE_SWING_RADIUS:
                 rospy.loginfo("Cannot spawn the obstacle. Obstacle is too close to robot's current position or a path endpoint.")
@@ -211,7 +201,3 @@ if __name__ == '__main__':
             delete_all_obstacles(obstacle_set, delete_model)
             rospy.loginfo("Exiting...")
             break
-    
-
-
-

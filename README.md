@@ -83,8 +83,8 @@ git clone https://github.com/osrf/gazebo_models.git
 More information on the database is available here: [http://gazebosim.org/tutorials?tut=model_structure&cat=build_robot](http://gazebosim.org/tutorials?tut=model_structure&cat=build_robot)
 
 
-# Getting ROS_Research
-At this point you should be able to get ROS_Research.
+# Installing ROS_Research
+At this point you should be able to install ROS_Research.
 
 Run the command:
 ```
@@ -158,13 +158,13 @@ Once this is completed, you are ready to run other ROS_Research software.
 
 
 ## Creating a Custom SLAM Map
-*This section is optional*
+*This section is optional.*
 
-SLAM stands for Simultaneous Localization and Mapping. I won't go into detail about about the theory here, but there are plenty of resources online that explain it.
+SLAM stands for Simultaneous Localization and Mapping. I won't go into detail about the theory here, but there are plenty of resources online that explain it.
 
-In order to use Gazebo with RViz you need a map of the Gazebo world that can work with RViz. As stated in the previous section, there is a map already included.
+To use Gazebo with RViz, you need a map of the Gazebo world that can work with RViz. As stated in the previous section, there is a map already included.
 
-If you would like to make your own using SLAM, you can follow this [tutorial](https://emanual.robotis.com/docs/en/platform/turtlebot3/slam_simulation/).
+If you would like to make your own map using SLAM, you can follow this [tutorial](https://emanual.robotis.com/docs/en/platform/turtlebot3/slam_simulation/).
 
 ## patrolling Package
 ### listener.py
@@ -176,7 +176,7 @@ With Gazebo and RViz started up and initialized, open another terminal window fr
 
 Enter the following command:
 ```
-listener.py
+rosrun patrolling listener.py
 ```
  ***Double Check Command and directory it needs to be run from.***
 ***Add Pictures***

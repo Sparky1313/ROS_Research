@@ -3,13 +3,11 @@
 # Code modified from ROS Developers LIVE-Class #56: Make Your Robot Patrol An Area by The Construct 
 # https://youtu.be/p-ZG6E-PZVA?t=3424
 
-# Make sure that all dependencies are included in package.xml
-
 import rospy
 import actionlib
 # import tf
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from threading import Thread, Lock
+# from threading import Thread, Lock
 from std_msgs.msg import String
 # import sys
 
@@ -64,7 +62,7 @@ def read_waypoints_file(filename):
 
 
 class Patrol:
-    """"""
+    """A class that sets the goals for a robot to move to."""
     def __init__(self):
         self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
         self.client.wait_for_server()
@@ -72,7 +70,7 @@ class Patrol:
         self.is_executing_interrupt_routine = False
 
     def set_goal_to_point(self, position, orientation):
-        
+        """Sets the goals that a robot should travel to using MoveBaseGoal."""
         goal = MoveBaseGoal()
         goal.target_pose.header.frame_id = "map"
         goal.target_pose.header.stamp = rospy.Time.now()
@@ -104,6 +102,7 @@ class Patrol:
 
             
 class Robot_Task_Listener:
+    """A class"""
     def __init__(self, patrol):
         # A dictionary that contains the file paths associated with different robot tasks.
         self.task_dict = {
@@ -130,6 +129,7 @@ class Robot_Task_Listener:
         
 
     def listen(self):
+        """Listens for robot tasks on the topic 'robot_tasks'. Invokes a specified callback when a message is received."""
         rospy.loginfo("Trying to listen for robot tasks...")
         rospy.Subscriber('robot_tasks', String, self.callback)
         rospy.loginfo("Listening for robot tasks.")
