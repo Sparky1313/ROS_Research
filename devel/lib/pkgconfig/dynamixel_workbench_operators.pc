@@ -1,8 +1,0 @@
-prefix=/home/walle/catkin_ws/devel
-
-Name: dynamixel_workbench_operators
-Description: Description of dynamixel_workbench_operators
-Version: 2.2.1
-Cflags: -I/home/walle/catkin_ws/src/dynamixel-workbench/dynamixel_workbench_operators/include
-Libs: -L${prefix}/lib 
-Requires: roscpp std_srvs sensor_msgs trajectory_msgs geometry_msgs cmake_modules

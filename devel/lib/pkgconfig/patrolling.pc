@@ -1,8 +1,0 @@
-prefix=/home/walle/catkin_ws/devel
-
-Name: patrolling
-Description: Description of patrolling
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

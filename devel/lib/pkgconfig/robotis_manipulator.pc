@@ -1,8 +1,0 @@
-prefix=/home/walle/catkin_ws/devel
-
-Name: robotis_manipulator
-Description: Description of robotis_manipulator
-Version: 1.1.1
-Cflags: -I/home/walle/catkin_ws/src/robotis_manipulator/include -I/usr/include/eigen3
-Libs: -L${prefix}/lib -lrobotis_manipulator
-Requires: roscpp cmake_modules

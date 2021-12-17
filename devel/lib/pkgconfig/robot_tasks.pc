@@ -1,8 +1,0 @@
-prefix=/home/walle/catkin_ws/devel
-
-Name: robot_tasks
-Description: Description of robot_tasks
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
