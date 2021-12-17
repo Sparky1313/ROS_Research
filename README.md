@@ -93,6 +93,18 @@ git clone https://github.com/Sparky1313/ROS_Research.git
 cd ~/catkin_ws && catkin_make
 ```
 
+Next, run:
+```
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+```
+
+When you are done, the bottom 3 lines of your `~/.bashrc` file should look like:
+```
+source /opt/ros/melodic/setup.bash
+export TURTLEBOT3_MODEL=waffle_pi
+source ~/catkin_ws/devel/setup.bash
+```
+
 
 # Running Programs in ROS_Research
 ## Basic Commands When Starting any ROS_Research Software
