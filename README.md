@@ -181,7 +181,7 @@ If you would like to make your own map using SLAM, you can follow this [tutorial
 ## patrolling Package
 ### listener.py
 #### listener.py Description
-[listener.py](/src/patrolling/src/listener.py) is a simple script that allows you to create a custom path for your robot using RViz. This path can later be broadcast to the robot by running patrol.py ***Add in section link*** to make the robot patrol the path.
+[listener.py](/src/patrolling/src/listener.py) is a simple script that allows you to create a custom path for your robot using RViz. This path can later be broadcast to the robot by running [patrol.py](https://github.com/Sparky1313/ROS_Research#patrolpy) to make the robot patrol the path.
 
 #### Running listener.py
 With Gazebo and RViz started up and initialized, open another terminal window from `~/catkin_ws`.
@@ -190,8 +190,6 @@ Enter the following command:
 ```
 rosrun patrolling listener.py
 ```
- ***Double Check Command and directory it needs to be run from.***
-***Add Pictures***
 
 After the listener.py is running, press the *2D Nav Goal* button. 
 
