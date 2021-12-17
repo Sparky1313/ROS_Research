@@ -138,7 +138,7 @@ After Gazebo loads it should look like this:
 
 
 #### RViz
-`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map created by using a SLAM Technique (discussed here (insert link to section)) of the world Gazebo is using for its simulation. For convenience, a map named [map1.pgm](src/map1.pgm) (along with its yaml file [map1.yaml](src/map1.yaml)) of `turtlebot3_house` has been included.
+`roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=$HOME/catkin_ws/src/map1.yaml` will open RViz, a program that allows you to *see* what your robot *sees* along with the path the robot is taking. The command launches RViz using the configuration in the launch file `turtlebot3_navigation.launch` in the directory `/opt/ros/melodic/share/turtlebot3_navigation/launch`. The `map_file` argument specifies what map for RViz to use. The map should be a map of the world Gazebo is using for its simulation. This map should be created using a [SLAM technique](https://github.com/Sparky1313/ROS_Research#creating-a-custom-slam-map). For convenience, a map named [map1.pgm](src/map1.pgm) (along with its yaml file [map1.yaml](src/map1.yaml)) of `turtlebot3_house` has been included.
 
 After RViz loads it should look like this:
 
@@ -174,7 +174,7 @@ Once this is completed, you are ready to run other ROS_Research software.
 
 SLAM stands for Simultaneous Localization and Mapping. I won't go into detail about the theory here, but there are plenty of resources online that explain it.
 
-To use Gazebo with RViz, you need a map of the Gazebo world that can work with RViz. As stated in the previous section, there is a map already included.
+To use Gazebo with RViz, you need a map of a Gazebo world that can work with RViz. As stated in the previous section, there is a map already included.
 
 If you would like to make your own map using SLAM, you can follow this [tutorial](https://emanual.robotis.com/docs/en/platform/turtlebot3/slam_simulation/).
 
@@ -210,9 +210,9 @@ When you are done, just ^C in the terminal and the program will end.
 #### patrol.py Description
 [patrol.py](/src/patrolling/src/patrol.py) is a program that will read in the waypoints stored in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt) and broadcast to the robot so that the robot will move to them. The program uses [actionlib](http://wiki.ros.org/actionlib) and [move_base](http://wiki.ros.org/move_base) to accomplish this.
 
-[patrol.py](/src/patrolling/src/patrol.py) also listens for robot tasks for the robot (robot tasks are not part of ROS, just a concept for the Patrolling Package). The robot tasks can stop the robot's travel at its current waypoint and send a separate set of waypoints the robot needs to go to for a task. After the robot completes the robot task path, it will resume traveling to waypoint it was going to before the interrupt.
+[patrol.py](/src/patrolling/src/patrol.py) also listens for robot tasks for the robot (robot tasks are not part of ROS, just a concept for the Patrolling package). The robot tasks can stop the robot's travel at its current waypoint and send a separate set of waypoints the robot needs to go to for a task. After the robot completes the robot task path, it will resume traveling to waypoint it was going to before the interrupt.
 
-There is only one robot task currently defined for the TurtleBot3 and that is a [doorbell task](src/robot_tasks/src/doorbell_waypoints.txt). The task is just a set of waypoints in a .txt file just like [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). More tasks can be created and placed in [robot_tasks/src](src/robot_tasks/src/). To implement these in [patrol.py](/src/patrolling/src/patrol.py) just add the file path to `self.task_dict` in the `Robot_Task_Listener` class.
+There is only one robot task currently defined for the TurtleBot3 and that is a [doorbell task](src/robot_tasks/src/doorbell_waypoints.txt). The task is just a set of waypoints in a .txt file just like [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt). More tasks can be created and placed in [robot_tasks/src](src/robot_tasks/src/). To implement these in [patrol.py](/src/patrolling/src/patrol.py), just add the file path to `self.task_dict` in the `Robot_Task_Listener` class.
 
 **By default there are already waypoints in [patrol_waypoints.txt](/src/patrolling/src/patrol_waypoints.txt), so you can run [patrol.py](/src/patrolling/src/patrol.py) without having to use [listener.py](/src/patrolling/src/listener.py) to record your own waypoints .*
 
@@ -255,26 +255,26 @@ This will send the robot to "answer" the door. It will then resume traveling to 
 ## spawn_obstacles Package
 ### spawn_obstacles.py
 #### spawn_obstacles.py Description
-[spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) is a program that will spawn obstacles in front of the robot as it travels a to a waypoint so that it will have to maneuver around them. This creates a dynamic environment to test against.
+[spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) is a program that will spawn obstacles in front of the robot as it travels to a waypoint so that it will have to maneuver around them. This creates a dynamic environment to test against.
 
-When obstacles are spawned they will be assigned a specific id/name that can be used to reference them for deletion. By default, the object will be a beer bottle. You can modify [spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) to use other objects from ```gazebo_models``` as obstacles.
+When obstacles are spawned, they will be assigned a specific id/name that can be used to reference them for deletion. By default, the object will be a beer bottle. You can modify [spawn_obstacles.py](/src/spawn_obstacles/src/spawn_obstacles.py) to use other objects from ```gazebo_models``` as obstacles.
 
 ![Obstacle Name](/README_Photos/Obstacle_Name.png)
 
 
 #### Running spawn_obstacles.py
-With Gazebo, RViz, and patrol.py started up and initialized, open another terminal window from `~/catkin_ws`.
+With Gazebo, RViz, and [patrol.py](/src/patrolling/src/patrol.py) started up and initialized, open another terminal window from `~/catkin_ws`.
 
 Run the command:
 ```
 rosrun spawn_obstacles spawn_obstacles.py
 ```
 
-This will spawn a command line menu:
+This will open a command line menu:
 
 ![Spawn Obstacles Main Menu](/README_Photos/Spawn_Obstacle_Main_Menu.png)
 
-From there you have the option to spawn an obstacle, delete a specific obstacle, cleanup (delete all) obstacles, or cleanup and exit.
+From there, you have the option to spawn an obstacle, delete a specific obstacle, cleanup (delete all) obstacles, or cleanup and exit.
 
 
 #### Spawn an Obstacle
